@@ -69,15 +69,14 @@ function WatchModel({ modelPath, scaleFactor, isExploded, isMobile }: WatchModel
   useFrame((_, delta) => {
     const step = THREE.MathUtils.clamp(delta * 4.0, 0, 1);
 
-    // 1. Animação de dispersão das peças individuais
+    // Dispersão individual das peças
     partsRef.current.forEach(({ mesh, origPos, targetOffset }) => {
       const target = isExploded ? origPos.clone().add(targetOffset) : origPos;
       mesh.position.lerp(target, step);
     });
 
-    // 2. Zoom out suave no Explode (animando o container sem travar o OrbitControls)
+    // Enquadramento adaptativo suave
     if (containerRef.current) {
-      // Quando explode no mobile reduz para 0.65x e no desktop para 0.8x para caber no centro
       const targetScaleMultiplier = isExploded ? (isMobile ? 0.65 : 0.82) : 1.0;
       const targetY = isExploded ? (isMobile ? 0.28 : 0.18) : (isMobile ? 0.15 : 0.25);
 
@@ -105,7 +104,7 @@ function WatchModel({ modelPath, scaleFactor, isExploded, isMobile }: WatchModel
 function Loader() {
   return (
     <Html center>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-2 pointer-events-none">
         <div className="w-5 h-5 border border-white/20 border-t-[#D4AF37] rounded-full animate-spin" />
         <span className="text-[9px] font-mono tracking-widest text-white/50 uppercase">
           CALIBRATING
@@ -164,6 +163,7 @@ export function WatchScene({ currentModel, scaleFactor, isExploded }: SceneProps
           autoRotateSpeed={0.8}
         />
 
+        {/* Sombras suaves e realistas */}
         <ContactShadows
           position={[0, isMobile ? -1.4 : -1.2, 0]}
           opacity={0.5}
@@ -172,8 +172,14 @@ export function WatchScene({ currentModel, scaleFactor, isExploded }: SceneProps
           far={3}
         />
 
+        {/* Reflexos cromados de alta fidelidade */}
         <Environment preset="city" environmentIntensity={0.8} />
       </Canvas>
     </div>
   );
 }
+
+// Preload dos modelos
+useGLTF.preload('/models/rolex_datejust.glb');
+useGLTF.preload('/models/seiko_watch.glb');
+useGLTF.preload('/models/ben_ten_watch.glb');
