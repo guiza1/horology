@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { WatchScene } from './components/WatchScene';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Layers, Disc3 } from 'lucide-react';
